@@ -1,3 +1,17 @@
+#' 获取数据库连接，如果要修改，也在此修改即可
+#'
+#' @return 返回值
+#' @import tsda
+#' @export
+#'
+#' @examples
+#' get_nsic()
+get_nsic <- function() {
+  res <- conn_rds('nsic')
+  return(res)
+
+}
+
 #conn <- tsda::conn_rds('nsic')
 #'  获取新的ID
 #'
@@ -7,7 +21,7 @@
 #' @examples
 #' ques_newId()
 ques_newId <- function(){
-  conn <- tsda::conn_rds('nsic')
+  conn <- get_nsic()
   sql <-'select max(fid)+1  as fid  from t_tsp_ques'
   r <- sql_select(conn,sql)
   res <- as.character(r$fid)
@@ -29,7 +43,7 @@ ques_newId <- function(){
 #' @examples
 #' ques_commit()
 ques_commit <- function(FCspName='bot19',FQues='多少钱',FAnsw='请内部支持',FTspName='badou'){
-  conn <- tsda::conn_rds('nsic')
+  conn <- get_nsic()
 
   sql <- paste0(  "insert into t_tsp_ques values(",
                   ques_newId(),
@@ -55,7 +69,7 @@ ques_commit <- function(FCspName='bot19',FQues='多少钱',FAnsw='请内部支�
 #' @examples
 #' getBooks()
 getBooks <- function(table='t_tsp_ques') {
-  conn <- tsda::conn_rds('nsic')
+  conn <- get_nsic()
   sql_header <- sql_gen_select(conn,table = table)
   sql_tail <- ' where FPushStatus=1 and FPullStatus =0 '
 
@@ -90,7 +104,7 @@ getBooks <- function(table='t_tsp_ques') {
 #' @examples
 #' getBooks2()
 getBooks2 <- function(table='t_tsp_ques') {
-  conn <- tsda::conn_rds('nsic')
+  conn <- get_nsic()
   sql_header <- sql_gen_select(conn,table = table)
   sql_tail <- ' where FPushStatus = 0 order by FPriorCount desc  '
 
@@ -127,7 +141,7 @@ getBooks2 <- function(table='t_tsp_ques') {
 #' @examples
 #' getMax_id()
 getMax_id <-function(conn,table='t_tsp_ques',id_var='FId'){
-  conn <- tsda::conn_rds('nsic')
+  conn <- get_nsic()
   sql <- sql_gen_select(conn,table,id_var)
   #print(sql)
   r <-sql_select(conn,sql)
@@ -151,7 +165,7 @@ getMax_id <-function(conn,table='t_tsp_ques',id_var='FId'){
 #' @examples
 #' books.insert.callback()
 books.insert.callback <- function(data, row ,table='t_tsp_ques',f=getBooks,id_var='FId') {
-  conn <- tsda::conn_rds('nsic')
+  conn <- get_nsic()
   sql_header <- sql_gen_insert(conn,table)
   fieldList <-sql_fieldInfo(conn,table)
   ncount <-nrow(fieldList)
@@ -197,7 +211,7 @@ books.update.callback <- function(data, olddata, row,
                                   edit.cols = c('FQues','FAnsw'),
                                   id_var='FId')
 {
-  conn <- tsda::conn_rds('nsic')
+  conn <- get_nsic()
 
   sql_body <-'update  t_tsp_ques  set  FPullStatus = 1  '
   print(sql_body)
@@ -231,7 +245,7 @@ books.update.callback2 <- function(data, olddata, row,
                                    edit.cols = c('FQues','FAnsw'),
                                    id_var='FId')
 {
-  conn <- tsda::conn_rds('nsic')
+  conn <- get_nsic()
   sql_body <-'update  t_tsp_ques  set  FPriorCount = FPriorCount +  1  '
   print(sql_body)
   sql_tail <-paste0(' where ',id_var,' = ',data[row,id_var])
@@ -259,7 +273,7 @@ books.update.callback2 <- function(data, olddata, row,
 #' @examples
 #' books.delete.callback()
 books.delete.callback <- function(data, row ,table ='t_tsp_ques',f=getBooks,id_var='FId') {
-  conn <- tsda::conn_rds('nsic')
+  conn <- get_nsic()
   sql_header <- sql_gen_delete(table);
   sql_tail <-paste0('  ',id_var,' = ',data[row,id_var])
   query <- paste0(sql_header,sql_tail)

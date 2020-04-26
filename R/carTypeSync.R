@@ -6,7 +6,7 @@
 #' @examples
 #' getCarType()
 getCarType <- function(){
-  conn <- conn_rds('nsic')
+  conn <- get_nsic()
   sql <- "select FBrandName,FCartypeName  from t_md_carType"
   mydata  <- sql_select(conn,sql)
 
