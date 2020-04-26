@@ -4,8 +4,15 @@
 \alias{books.update.callback2}
 \title{更校报2}
 \usage{
-books.update.callback2(data, olddata, row, table = "t_tsp_ques",
-  f = getBooks2, edit.cols = c("FQues", "FAnsw"), id_var = "FId")
+books.update.callback2(
+  data,
+  olddata,
+  row,
+  table = "t_tsp_ques",
+  f = getBooks2,
+  edit.cols = c("FQues", "FAnsw"),
+  id_var = "FId"
+)
 }
 \arguments{
 \item{data}{新数据}

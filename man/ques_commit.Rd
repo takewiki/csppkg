@@ -4,8 +4,12 @@
 \alias{ques_commit}
 \title{问题提交}
 \usage{
-ques_commit(FCspName = "bot19", FQues = "多少钱",
-  FAnsw = "请内部支持", FTspName = "badou")
+ques_commit(
+  FCspName = "bot19",
+  FQues = "多少钱",
+  FAnsw = "请内部支持",
+  FTspName = "badou"
+)
 }
 \arguments{
 \item{FCspName}{客服名称}

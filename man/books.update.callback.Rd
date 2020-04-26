@@ -4,8 +4,15 @@
 \alias{books.update.callback}
 \title{更新数据}
 \usage{
-books.update.callback(data, olddata, row, table = "t_tsp_ques",
-  f = getBooks, edit.cols = c("FQues", "FAnsw"), id_var = "FId")
+books.update.callback(
+  data,
+  olddata,
+  row,
+  table = "t_tsp_ques",
+  f = getBooks,
+  edit.cols = c("FQues", "FAnsw"),
+  id_var = "FId"
+)
 }
 \arguments{
 \item{data}{新数据}
