@@ -28,7 +28,8 @@ icLogUpload <- function(conn=conn_rds_nsic(),FNickName='RDS',FQuesText='å‘çŽ°è¿
     ic_log$FAnswerNumber <- 0
   }
 
-  tsda::upload_data(conn,'t_ic_log',ic_log)
+  #tsda::upload_data(conn,'t_ic_log',ic_log)
+  tsda::db_writeTable(conn=conn,table_name = 't_ic_log',r_object = ic_log,append = T)
 }
 
 
@@ -56,7 +57,9 @@ queryLog_upload <- function(conn=conn_rds_nsic(),FNickName='RDS',FQuesText='å‘ç
                       FScore = answ$FScore,
                       FSysMatch = answ$FQuesMatch,
                       FAnswerText = answ$FAnsw,
-                      FAnswerNumber = answ$FIndex)
-   tsda::upload_data(conn,'t_query_log',aiLog)
+                      FAnswerNumber = answ$FIndex,
+                      stringsAsFactors = F)
+   #tsda::upload_data(conn,'t_query_log',aiLog)
+   tsda::db_writeTable(conn=conn,table_name = 't_query_log',r_object = aiLog,append = T)
 
 }
