@@ -6,13 +6,20 @@
 #' @param answ  问题回复数据包
 #' @param index 可中部分
 #' @param type 问题序号
+#' @param forHelp 是否内部支持
 #'
 #' @return 返回值
 #' @export
 #'
 #' @examples
 #' icLogUpload()
-icLogUpload <- function(conn=conn_rds_nsic(),FNickName='RDS',FQuesText='发现运动版多少钱',answ,index=1,type='A') {
+icLogUpload <- function(conn=conn_rds_nsic(),FNickName='RDS',FQuesText='发现运动版多少钱',answ,index=1,type='A',forHelp=0) {
+
+  if (forHelp ==0){
+    value_answNumber <- index
+  }else{
+    value_answNumber <- 0
+  }
 
   ic_log <-data.frame(FNickName=FNickName,
                         FCreateTime=getTime(),
@@ -21,7 +28,7 @@ icLogUpload <- function(conn=conn_rds_nsic(),FNickName='RDS',FQuesText='发现�
                         FScore = answ$FScore[index],
                         FSysMatch = answ$FQuesMatch[index],
                         FAnswerText = answ$FAnsw[index],
-                        FAnswerNumber = index,
+                        FAnswerNumber = value_answNumber,
                         FAnswerType = type,
                         stringsAsFactors = F)
   if (type =='C'){

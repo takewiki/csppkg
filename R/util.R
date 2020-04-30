@@ -82,6 +82,40 @@ getBooks <- function(table='t_tsp_ques') {
 }
 
 
+#' 处理内容
+#'
+#' @param table 表
+#' @param FCspName 客服名称
+#'
+#' @return 返回值
+#' @export
+#'
+#' @examples
+#' csp_getBooks()
+csp_getBooks <- function(table='t_tsp_ques',FCspName='巴豆') {
+  conn <- conn_rds_nsic()
+  sql_header <- sql_gen_select(conn,table = table)
+  sql_tail <- paste0(' where FPushStatus=1 and FPullStatus =0 '," and FCspName ='",FCspName,"'")
+
+  sql <- paste0(sql_header,sql_tail)
+  #print(sql)
+  books <-sql_select(conn,sql)
+  #print(books)
+  #针对进行格式化处理
+  #如果出来新的数据类型，需要添加格式化函数
+  #请修改format_to_dtedit  --formatter.R
+  fieldList <-sql_fieldInfo(conn,table)
+  print(fieldList)
+  for (i in 1:ncol(books)){
+    type <-fieldList[i,'FTypeName']
+    print(type)
+    books[,i] <-format_to_dtedit(type)(books[,i])
+
+  }
+
+  return(books)
+}
+
 
 #' 提交内部支持
 #'
@@ -116,7 +150,39 @@ getBooks2 <- function(table='t_tsp_ques') {
   return(books)
 }
 
+#' 插入值
+#'
+#' @param table 表
+#' @param FCspName 客服名称
+#'
+#' @return 返回值
+#' @export
+#'
+#' @examples
+#' csp_getBooks()
+csp_getBooks2 <- function(table='t_tsp_ques',FCspName='巴豆') {
+  conn <- conn_rds_nsic()
+  sql_header <- sql_gen_select(conn,table = table)
+  sql_tail <- paste0(" where FPushStatus = 0  and FCspName ='",FCspName,"' order by FPriorCount desc  ")
 
+  sql <- paste0(sql_header,sql_tail)
+  #print(sql)
+  books <-sql_select(conn,sql)
+  #print(books)
+  #针对进行格式化处理
+  #如果出来新的数据类型，需要添加格式化函数
+  #请修改format_to_dtedit  --formatter.R
+  fieldList <-sql_fieldInfo(conn,table)
+  print(fieldList)
+  for (i in 1:ncol(books)){
+    type <-fieldList[i,'FTypeName']
+    print(type)
+    books[,i] <-format_to_dtedit(type)(books[,i])
+
+  }
+
+  return(books)
+}
 
 #' 获取最大ID
 #'
@@ -213,6 +279,43 @@ books.update.callback <- function(data, olddata, row,
 }
 
 
+#' 处理更新事项
+#'
+#' @param data 数据
+#' @param olddata 原来数据
+#' @param row 新的数据
+#' @param table 表
+#' @param f 函数
+#' @param edit.cols 列
+#' @param id_var 内码
+#' @param FCspName 客服
+#'
+#' @return 返回值
+#' @export
+#'
+#' @examples
+#' csp_books.update.callback()
+csp_books.update.callback <- function(data, olddata, row,
+                                  table='t_tsp_ques',
+                                  f=csp_getBooks,
+                                  edit.cols = c('FQues','FAnsw'),
+                                  id_var='FId',
+                                  FCspName='巴豆'
+                                  )
+{
+  conn <- conn_rds_nsic()
+
+  sql_body <-'update  t_tsp_ques  set  FPullStatus = 1  '
+  print(sql_body)
+  sql_tail <-paste0(' where ',id_var,' = ',data[row,id_var])
+  query <- paste0(sql_body,sql_tail)
+
+  print(query) # For debugging
+  sql_update(conn, query)
+  return(f(FCspName=FCspName))
+}
+
+
 #' 更校报2
 #'
 #' @param data 新数据
@@ -245,6 +348,40 @@ books.update.callback2 <- function(data, olddata, row,
   return(f())
 }
 
+
+#' 数据
+#'
+#' @param data 处理
+#' @param olddata 数据
+#' @param row 行
+#' @param table 表
+#' @param f 函数
+#' @param edit.cols 个签
+#' @param id_var 经
+#' @param FCspName 在
+#'
+#' @return 返回值
+#' @export
+#'
+#' @examples
+#' csp_books.update.callback2()
+csp_books.update.callback2 <- function(data, olddata, row,
+                                   table='t_tsp_ques',
+                                   f=csp_getBooks2,
+                                   edit.cols = c('FQues','FAnsw'),
+                                   id_var='FId',
+                                   FCspName='巴豆')
+{
+  conn <- conn_rds_nsic()
+  sql_body <-'update  t_tsp_ques  set  FPriorCount = FPriorCount +  1  '
+  print(sql_body)
+  sql_tail <-paste0(' where ',id_var,' = ',data[row,id_var])
+  query <- paste0(sql_body,sql_tail)
+
+  print(query) # For debugging
+  sql_update(conn, query)
+  return(f(FCspName=FCspName))
+}
 
 
 

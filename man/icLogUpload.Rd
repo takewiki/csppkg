@@ -10,7 +10,8 @@ icLogUpload(
   FQuesText = "发现运动版多少钱",
   answ,
   index = 1,
-  type = "A"
+  type = "A",
+  forHelp = 0
 )
 }
 \arguments{
@@ -25,6 +26,8 @@ icLogUpload(
 \item{index}{可中部分}
 
 \item{type}{问题序号}
+
+\item{forHelp}{是否内部支持}
 }
 \value{
 返回值
