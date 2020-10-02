@@ -4,8 +4,13 @@
 \alias{books.delete.callback}
 \title{删除}
 \usage{
-books.delete.callback(data, row, table = "t_tsp_ques", f = getBooks,
-  id_var = "FId")
+books.delete.callback(
+  data,
+  row,
+  table = "t_tsp_ques",
+  f = getBooks,
+  id_var = "FId"
+)
 }
 \arguments{
 \item{data}{数据}

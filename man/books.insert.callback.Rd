@@ -4,8 +4,13 @@
 \alias{books.insert.callback}
 \title{新增}
 \usage{
-books.insert.callback(data, row, table = "t_tsp_ques", f = getBooks,
-  id_var = "FId")
+books.insert.callback(
+  data,
+  row,
+  table = "t_tsp_ques",
+  f = getBooks,
+  id_var = "FId"
+)
 }
 \arguments{
 \item{data}{数据}
